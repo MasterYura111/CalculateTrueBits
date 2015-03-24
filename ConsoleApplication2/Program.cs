@@ -27,7 +27,7 @@ class Funct_F
             {
                 if (array_prev[j] ==1)
                 {
-                    count_one -= 2;
+                    count_one -= 20;
                 }
                 else
                     break;
