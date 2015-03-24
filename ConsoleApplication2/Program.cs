@@ -10,32 +10,69 @@ class Funct_F
         
        
         int count_one = 0;
-        int i,j;
-        
+        int i;
+        int max_count;
+        int min_count;
+        int next_index_array;
+        int next_val_array;
+        int remainder=0;
+        int mark_last = 0;
 
         Array.Sort(array_M);  
         int[] SortM = array_M.Distinct().ToArray();
-        int[] array_prev = new int[SortM[SortM.Length-1]+1];
 
-        foreach (int val in SortM)
+        int[] array_prev = new int[SortM[SortM.Length-1]+3];
+        
+
+
+        max_count = SortM[SortM.Length - 1];
+        min_count=SortM[0];
+        next_index_array = 1;
+        next_val_array = SortM[1];
+
+        for (i = min_count; i <= max_count+2; i++)
         {
-            i = val;
-            Console.WriteLine(i);
-            array_prev[i] = 1;
-            count_one += 2;
-            for(j=i-1;j>=0;j--)
+            if (i == next_val_array && mark_last==0)
             {
-                if (array_prev[j] ==1)
-                {
-                    count_one -= 20;
-                }
+                array_prev[i] = 1;
+                next_index_array++;
+                if (SortM.Length > next_index_array)
+                    next_val_array = SortM[next_index_array];
                 else
-                    break;
+                    mark_last = 1;
+            }
+            else
+            {
+                if (i == min_count)
+                    array_prev[i] = 1;
+                else
+                    array_prev[i] = 0;
+            }
+            
+            if (array_prev[i] == 1 && array_prev[i - 1] == 1)
+            {
+                if (remainder == 1)
+                    count_one++;
                 
+                remainder = 1;
             }
 
-        }
+            if ((array_prev[i] == 1 && array_prev[i - 1] == 0)
+                || (array_prev[i] == 0 && array_prev[i - 1] == 1))
+            {
+                if (remainder == 0)
+                   count_one++;
+            }
 
+            if (array_prev[i] == 0 && array_prev[i - 1] == 0)
+            {
+                if (remainder == 1)
+                {
+                    count_one++;
+                    remainder = 0;
+                }
+            }
+        }
 
         return count_one;
     }
@@ -44,8 +81,7 @@ class Funct_F
     {
         static void Main()
         {
-            int[] array = {1,3,5};   //  test
+            int[] array = { 2, 4, 6, 7, 10, 11, 12, 13, 14, 15, 16, 20, 100023 };   //  //if array value>=1
             Console.WriteLine("count one: " + Funct_F.F(array));
-
         }
     }
