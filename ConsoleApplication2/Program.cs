@@ -7,49 +7,37 @@ class Funct_F
 {
     public static int F(int[] array_M)
     {
-        
-       
         int count_one = 0;
-        int i;
-        int max_count;
-        int min_count;
-        int next_index_array;
-        int next_val_array;
         int remainder=0;
-        int mark_last = 0;
+        int val = 0;
+        int prev_val = 0;
+        int prev_x = 0;
+        int mark_first = 1;
 
-        Array.Sort(array_M);  
-        int[] SortM = array_M.Distinct().ToArray();
-
-        int[] array_prev = new int[SortM[SortM.Length-1]+3];
-        
-
-
-        max_count = SortM[SortM.Length - 1];
-        min_count=SortM[0];
-        next_index_array = 1;
-        next_val_array = SortM[1];
-
-        for (i = min_count; i <= max_count+2; i++)
+        Array.Resize(ref array_M, array_M.Length + 2);  //для обчислень останіх розряду враховуючи остачу 
+       
+        foreach (int x in array_M)
         {
-            if (i == next_val_array && mark_last==0)
+            val = 1;
+
+            if(x==0)
+                val=0;
+            
+            if ((x - prev_x>1) && mark_first==0 )
             {
-                array_prev[i] = 1;
-                next_index_array++;
-                if (SortM.Length > next_index_array)
-                    next_val_array = SortM[next_index_array];
-                else
-                    mark_last = 1;
-            }
-            else
-            {
-                if (i == min_count)
-                    array_prev[i] = 1;
-                else
-                    array_prev[i] = 0;
+                if(x-prev_x>1 && remainder==0)
+                   count_one++;
+                
+                if (x - prev_x > 2 && remainder == 1)
+                {
+                    count_one++;
+                    remainder = 0;
+                }
+
+                prev_val = 0;
             }
             
-            if (array_prev[i] == 1 && array_prev[i - 1] == 1)
+            if (val == 1 && prev_val == 1)
             {
                 if (remainder == 1)
                     count_one++;
@@ -57,14 +45,14 @@ class Funct_F
                 remainder = 1;
             }
 
-            if ((array_prev[i] == 1 && array_prev[i - 1] == 0)
-                || (array_prev[i] == 0 && array_prev[i - 1] == 1))
+            if ((val == 1 && prev_val == 0)
+                || (val == 0 && prev_val == 1))
             {
                 if (remainder == 0)
                    count_one++;
             }
 
-            if (array_prev[i] == 0 && array_prev[i - 1] == 0)
+            if (val == 0 && prev_val == 0)
             {
                 if (remainder == 1)
                 {
@@ -72,6 +60,13 @@ class Funct_F
                     remainder = 0;
                 }
             }
+
+            prev_val = val;
+            prev_x = x;
+
+            if (mark_first==1)
+                mark_first = 0;
+           
         }
 
         return count_one;
@@ -81,7 +76,7 @@ class Funct_F
     {
         static void Main()
         {
-            int[] array = { 2, 4, 6, 7, 10, 11, 12, 13, 14, 15, 16, 20, 100023 };   //  //if array value>=1
+            int[] array = { 2, 4, 6, 7, 10, 11, 12, 13, 14, 15, 16, 20 }; // //if array value>=1
             Console.WriteLine("count one: " + Funct_F.F(array));
         }
     }
